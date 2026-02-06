@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作設計型態測驗</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { color: #857672; background-color: #f5f5f5; }
+        .option-bg { background-color: #B3A7A7; }
+        .option-btn:hover { border-color: #9AB992; background-color: #FDFDFB; }
+        .btn-primary { background-color: #D3DB9A; color: #FFFFFF; transition: all 0.3s ease; }
+        .btn-primary:hover { background-color: #9AB992; transform: translateY(-1px); }
+        .text-custom-title { color: #B4A8A6; }
+        /* 進度條文字顏色 */
+        .text-progress { color: #9AB992; }
+        .bg-custom-progress { background-color: #D3DB9A; }
+        .pre-line { white-space: pre-line; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
+
+    <div id="progress-container" class="w-full max-w-2xl mb-8 hidden">
+        <div class="flex justify-between mb-2 text-sm font-medium tracking-wide">
+            <span id="progress-text" class="text-progress">第 1 / 15 題</span>
+            <span id="progress-percent" class="text-progress">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-1.5">
+            <div id="progress-bar" class="bg-custom-progress h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <main class="w-full max-w-2xl bg-white rounded-3xl shadow-sm p-8 md:p-12">
+        
+        <div id="start-screen" class="text-center md:text-left">
+            <h1 class="text-3xl font-bold mb-8 leading-tight" style="color: #857672;">工作設計型態測驗：<br>你看清你待的「容器」了嗎？</h1>
+            <div class="text-lg mb-10 space-y-6 leading-relaxed opacity-90">
+                <p>今天這個測驗不是在測你，也不是在測能力。</p>
+                <p>它其實是在幫我們看清一件事：我們現在待的工作，是怎麼被設計的。</p>
+                <p>把「我是不是不夠好」換成「這個工作是用什麼邏輯在運作」。</p>
+            </div>
+            <button onclick="startQuiz()" class="btn-primary w-full py-5 rounded-2xl text-xl font-bold shadow-sm">
+                開始看清我的工作設計
+            </button>
+        </div>
+
+        <div id="quiz-screen" class="hidden">
+            <h2 id="question-group" class="text-custom-title font-bold mb-3 text-lg tracking-widest uppercase"></h2>
+            <h3 id="question-text" class="text-2xl font-bold mb-10 leading-snug" style="color: #857672;"></h3>
+            <div id="options-container" class="space-y-4"></div>
+            <button onclick="prevQuestion()" id="prev-btn" class="mt-10 flex items-center gap-2 font-medium opacity-60 hover:opacity-100 transition">
+                ← 回上一題
+            </button>
+        </div>
+
+        <div id="result-screen" class="hidden text-center">
+            <div class="flex justify-center mb-6">
+                <span id="result-tag" class="px-4 py-1 rounded-full text-xs font-bold text-white tracking-widest"></span>
+            </div>
+            <h2 id="result-title" class="text-4xl font-black mb-8" style="color: #857672;"></h2>
+            
+            <div class="space-y-6 mb-12">
+                <p id="result-desc1" class="text-lg leading-relaxed pre-line font-medium opacity-90"></p>
+                <p id="result-desc2" class="text-base leading-relaxed pre-line opacity-70"></p>
+            </div>
+
+            <hr class="my-10 border-gray-100">
+            
+            <div class="text-left p-8 rounded-3xl border-2 mb-10" style="background-color: #FDFDFB; border-color: #D3DB9A;">
+                <h4 class="font-bold mb-4 text-lg" style="color: #857672;">給你的提醒：</h4>
+                <p id="result-bottomNote" class="text-base leading-relaxed pre-line opacity-80"></p>
+            </div>
+
+            <p class="text-xs italic mb-10 leading-loose" style="color: #B4A8A6;">
+                「這不是標籤，也不是評價。它只是告訴你：你現在待的是哪一種『被設計好的工作容器』。」
+            </p>
+            
+            <button onclick="showFeedback()" class="btn-primary w-full py-5 rounded-2xl text-lg font-bold">
+                下一步：分享你的感想
+            </button>
+        </div>
+
+        <div id="feedback-screen" class="hidden">
+            <h2 class="text-2xl font-bold mb-8 text-center" style="color: #857672;">感謝參與！請分享你的真實感受</h2>
+            <form id="feedback-form" class="space-y-6">
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold opacity-80">這份測驗針對的工作，是你目前的：</label>
+                    <select id="job-stage" class="w-full border-2 border-gray-100 rounded-xl p-4 outline-none focus:border-indigo-200 transition" required>
+                        <option value="">請選擇</option>
+                        <option>第一份打工(兼任)工作</option>
+                        <option>非第一份打工(兼任)工作</option>
+                        <option>第一份實習</option>
+                        <option>非第一份實習</option>
+                        <option>第一份正職工作</option>
+                        <option>非第一份正職工作</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold opacity-80">符合度確認（與現況相符嗎？為什麼？）</label>
+                    <textarea id="feedback-match" rows="3" class="w-full border-2 border-gray-100 rounded-xl p-4 outline-none focus:border-indigo-200"></textarea>
+                </div>
+                <button type="submit" class="btn-primary w-full py-5 rounded-2xl font-bold">送出回饋並完成</button>
+            </form>
+        </div>
+
+        <div id="final-screen" class="hidden text-center py-10">
+            <h2 class="text-3xl font-bold mb-6" style="color: #857672;">已收到你的回饋！</h2>
+            <p class="mb-10 text-lg opacity-80">你看清的不是自己的極限，而是工作的邊界。<br>看得懂容器，是一輩子的能力。</p>
+            <button onclick="location.reload()" class="font-bold text-lg hover:underline" style="color: #9AB992;">重新測驗</button>
+        </div>
+    </main>
+
+    <script>
+        const quizData = [
+            { group: "一、決策密度", text: "在這份工作中，我多久需要做一次「會影響方向或結果」的決定？", options: { A: "幾乎沒有，主要是照需求執行", B: "偶爾，有一些小決定", C: "經常，需要自己判斷方向或取捨" } },
+            { group: "一、決策密度", text: "當事情卡關或不確定時，公司期待我怎麼做？", options: { A: "等明確指示再行動", B: "提出想法，請人確認", C: "自己判斷並承擔結果" } },
+            { group: "一、決策密度", text: "如果我今天不在，這份工作會發生什麼事？", options: { A: "幾乎不受影響，任何人都能快速接手", B: "需要一點交接，但流程清楚", C: "會卡住，因為需要我的判斷或脈絡" } },
+            { group: "二、腦力使用與思考空間", text: "我每天的工作內容中，有多少需要思考「為什麼要這樣做」？", options: { A: "幾乎沒有，只要照做", B: "偶爾，需要理解背景", C: "經常，需要理解目的與脈絡" } },
+            { group: "二、腦力使用與思考空間", text: "我能不能對需求或做法提出質疑或替代方案？", options: { A: "幾乎不行，需求已經定好", B: "可以提出，但不一定會被採納", C: "被期待提出不同做法一起討論" } },
+            { group: "二、腦力使用與思考空間", text: "我是否常覺得「其實不用我想這麼多，也可以完成」？", options: { A: "非常常", B: "偶爾", C: "很少或幾乎沒有" } },
+            { group: "三、角色邊界與成長可能", text: "如果我把現在的工作做得很好，通常會發生什麼？", options: { A: "被分配更多一樣的事情", B: "事情變多一點，內容差不多", C: "角色範圍或影響力會擴大" } },
+            { group: "三、角色邊界與成長可能", text: "這個角色是否有明確的「下一階段樣貌」？", options: { A: "沒有，主要靠年資累積", B: "有模糊方向，但不清楚", C: "有清楚的責任升級或定位變化" } },
+            { group: "三、角色邊界與成長可能", text: "在這個位置上，我是否被允許嘗試不同做法？", options: { A: "不太行，流程固定", B: "小範圍可以", C: "被鼓勵嘗試與優化" } },
+            { group: "四、責任歸屬與學習結構", text: "當我第一次做一件不熟的事情時，通常會發生什麼？", options: { A: "有人示範或清楚說明標準", B: "給方向，細節自己摸", C: "直接交給我，之後看結果" } },
+            { group: "四、責任歸屬與學習結構", text: "當事情結果不理想時，第一個被檢討的是什麼？", options: { A: "流程或資訊是否不足", B: "分工或溝通問題", C: "個人能力或主動性" } },
+            { group: "四、責任歸屬與學習結構", text: "在這個地方，「學會了」通常代表什麼？", options: { A: "能照流程完成、不出錯", B: "能撐住、不問、不造成麻煩", C: "知道為什麼這樣做，能獨立判斷" } },
+            { group: "五、未來感與自我想像", text: "如果我三年後還在這裡，我能否清楚想像自己的狀態？", options: { A: "很模糊，只是資深一點", B: "大概知道，但不確定", C: "很清楚自己會成為什麼樣的專業者" } },
+            { group: "五、未來感與自我想像", text: "想到這個三年後的自己，我的感受比較接近？", options: { A: "空或麻木", B: "普通、還好", C: "踏實或期待" } },
+            { group: "五、未來感與自我想像", text: "當我想到「繼續待在這裡」時，內在感覺比較像？", options: { A: "停滯、卡住", B: "穩定但有點空", C: "安心且有方向" } }
+        ];
+
+        const resultCards = {
+            type1: { title: "量產的標準量杯", tag: "# 執行穩定型", tagColor: "#D3DB9A", description1: "這種容器被設計得極其精確且透明，\n任何人拿起來都能量出一樣的刻度。", description2: "這份工作不要求主體性，只要求「準確」。\n你在裡面非常安全、穩定，\n但無法溢出這個量杯去創造新的形狀。", bottomNote: "如果你現在需要的是生活節奏的穩定，這個量杯很好；\n但如果你想當液體自由流動，你會覺得這裡太擠了。" },
+            type2: { title: "裂縫的暫存土碗", tag: "# 過渡撐住型", tagColor: "#D3DB9A", description1: "這是一個看起來能裝東西，\n但其實邊界模糊、甚至有些裂縫的土碗。", description2: "工作看起來好像可以發揮，實際上不上不下。\n組織依賴你來補足制度的裂縫，\n讓你得花額外的力氣去平衡。", bottomNote: "這最容易讓你覺得是自己不夠好，\n但其實是這個碗本身設計得不夠穩固。" },
+            type3: { title: "陶藝師的培植花盆", tag: "# 專業成長型", tagColor: "#D3DB9A", description1: "這是一個裝有土壤、允許種子慢慢發芽，\n並隨著成長而換盆的環境。", description2: "這裡有真實的學習曲線，成長雖慢但紮實。\n你的根系被允許在這裡深耕，\n只要你做得好，影響力會隨時間擴大。", bottomNote: "適合願意深耕的人，\n它被設計成可以長出未來的樣貌。" },
+            type4: { title: "無邊界的實驗燒瓶", tag: "# 決策參與型", tagColor: "#D3DB9A", description1: "在科學實驗室裡，用來混合各種未知元素、\n並產生劇烈化學反應的燒瓶。", description2: "容器被設計來裝「判斷與取捨」。\n壓力不是來自裝了多少東西，而是責任，\n你是實驗的主導者，你的判斷就是結果。", bottomNote: "高成長也高耗能，\n你是被高度需要的判斷主體。" },
+            type5: { title: "漏斗狀的拋棄式紙杯", tag: "# 消耗型容器", tagColor: "#D3DB9A", description1: "一個底端微漏、且用完即丟的薄紙杯，\n並不打算承載長期的累積。", description2: "工作內容不難，卻會慢慢掏空人的能量。\n東西倒進去就流走了，不承載人的成長。\n留在你手上的，通常只有疲累感。", bottomNote: "這不是你的問題，是這個容器本來就不承載人。\n認清這點，是停止自責的第一步。" }
+        };
+
+        let currentStep = 0;
+        let userAnswers = [];
+
+        function startQuiz() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('progress-container').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = quizData[currentStep];
+            document.getElementById('question-group').innerText = q.group;
+            document.getElementById('question-text').innerText = q.text;
+            document.getElementById('prev-btn').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            ['A', 'B', 'C'].forEach(label => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-6 border-2 border-gray-50 rounded-2xl font-medium flex gap-4 items-center transition-all shadow-sm";
+                btn.innerHTML = `<span class="option-bg text-white w-8 h-8 flex items-center justify-center rounded-lg text-sm shrink-0">${label}</span> <span>${q.options[label]}</span>`;
+                btn.onclick = () => selectOption(label);
+                container.appendChild(btn);
+            });
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const percent = Math.round((currentStep / quizData.length) * 100);
+            document.getElementById('progress-text').innerText = `第 ${currentStep + 1} / ${quizData.length} 題`;
+            document.getElementById('progress-percent').innerText = `${percent}%`;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+        }
+
+        function selectOption(label) {
+            userAnswers[currentStep] = label;
+            if (currentStep < quizData.length - 1) {
+                currentStep++;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderQuestion();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('progress-container').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            const counts = { A: 0, B: 0, C: 0 };
+            userAnswers.forEach(ans => counts[ans]++);
+            const q1to12 = userAnswers.slice(0, 12);
+            const q1to12Counts = { A: 0, B: 0, C: 0 };
+            q1to12.forEach(ans => q1to12Counts[ans]++);
+
+            let resultObj;
+            if (counts.A >= 8 && q1to12Counts.A >= 6) resultObj = resultCards.type1;
+            else if (counts.B >= 6) resultObj = resultCards.type2;
+            else if (counts.B + counts.C >= 9 && counts.C >= 4) resultObj = resultCards.type3;
+            else if (counts.C >= 7) resultObj = resultCards.type4;
+            else resultObj = resultCards.type5;
+
+            const tagEl = document.getElementById('result-tag');
+            tagEl.innerText = resultObj.tag;
+            tagEl.style.backgroundColor = resultObj.tagColor;
+            
+            document.getElementById('result-title').innerText = resultObj.title;
+            document.getElementById('result-desc1').innerText = resultObj.description1;
+            document.getElementById('result-desc2').innerText = resultObj.description2;
+            document.getElementById('result-bottomNote').innerText = resultObj.bottomNote;
+        }
+
+        function showFeedback() {
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('feedback-screen').classList.remove('hidden');
+        }
+
+        document.getElementById('feedback-form').onsubmit = function(e) {
+            e.preventDefault();
+            document.getElementById('feedback-screen').classList.add('hidden');
+            document.getElementById('final-screen').classList.remove('hidden');
+        };
+    </script>
+</body>
+</html>
