@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作設計型態測驗</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { color: #857672; }
+        .option-bg { background-color: #B3A7A7; }
+        .option-btn:hover { border-color: #9AB992; background-color: #F3F4F1; }
+        .btn-primary { background-color: #D3DB9A; color: #FFFFFF; }
+        .btn-primary:hover { background-color: #9AB992; }
+        .text-custom-title { color: #B4A8A6; }
+        .bg-custom-progress { background-color: #D3DB9A; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center p-4">
+
+    <div id="progress-container" class="w-full max-w-2xl mb-8 hidden">
+        <div class="flex justify-between mb-1 text-sm" style="color: #9AB992;">
+            <span id="progress-text">第 1 / 15 題</span>
+            <span id="progress-percent">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div id="progress-bar" class="bg-custom-progress h-2.5 rounded-full" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <main class="w-full max-w-2xl bg-white rounded-2xl shadow-sm p-8 mt-10">
+        
+        <div id="start-screen">
+            <h1 class="text-3xl font-bold mb-6" style="color: #857672;">工作設計型態測驗：<br>你看清你待的「容器」了嗎？</h1>
+            <div class="text-lg mb-8 space-y-4 leading-relaxed">
+                <p>今天這個測驗不是在測你，也不是在測能力 [cite: 1]。</p>
+                <p>它其實是在幫我們看清一件事：我們現在待的工作，是怎麼被設計的 [cite: 2, 3]。</p>
+                <p>把「我是不是不夠好」換成「這個工作是用什麼邏輯在運作」 [cite: 8, 9]。</p>
+            </div>
+            <button onclick="startQuiz()" class="btn-primary w-full py-4 rounded-xl text-xl font-semibold transition shadow-sm">
+                開始看清我的工作設計
+            </button>
+        </div>
+
+        <div id="quiz-screen" class="hidden">
+            <h2 id="question-group" class="text-custom-title font-bold mb-2 text-lg"></h2>
+            <h3 id="question-text" class="text-xl font-bold mb-8" style="color: #857672;"></h3>
+            <div id="options-container" class="space-y-4"></div>
+            <button onclick="prevQuestion()" id="prev-btn" class="mt-8 flex items-center gap-2 font-medium hover:opacity-70 transition">
+                ← 回上一題
+            </button>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <div class="text-center mb-8">
+                <span class="px-4 py-1 rounded-full text-sm font-bold uppercase" style="background-color: #F3F4F1; color: #B4A8A6;">測驗結果</span>
+                <h2 id="result-type" class="text-3xl font-black mt-4 mb-4" style="color: #857672;"></h2>
+                <p id="result-desc" class="text-lg leading-relaxed mb-6"></p>
+                <hr class="my-8 border-gray-100">
+                <div class="text-left p-6 rounded-xl border" style="background-color: #FDFDFB; border-color: #D3DB9A;">
+                    <h4 class="font-bold mb-3" style="color: #857672;">為什麼？（詳解與邏輯）</h4>
+                    <p id="result-detail" class="text-sm leading-relaxed"></p>
+                </div>
+            </div>
+            <p class="text-sm text-center italic mb-10" style="color: #B4A8A6;">「這不是標籤，也不是評價。它只是告訴你：你現在待的是哪一種『被設計好的工作容器』。」 [cite: 183-186]</p>
+            <button onclick="showFeedback()" class="btn-primary w-full py-4 rounded-xl text-lg font-semibold transition">
+                下一步：分享你的感想
+            </button>
+        </div>
+
+        <div id="feedback-screen" class="hidden">
+            <h2 class="text-2xl font-bold mb-6" style="color: #857672;">感謝參與！請分享你的真實感受</h2>
+            <form id="feedback-form" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold mb-2">這份測驗針對的工作，是你目前的：</label>
+                    <select id="job-stage" class="w-full border-gray-300 rounded-lg p-3 border focus:ring-2 focus:ring-indigo-200 outline-none" required>
+                        <option value="">請選擇</option>
+                        <option>第一份打工(兼任)工作</option>
+                        <option>非第一份打工(兼任)工作</option>
+                        <option>第一份實習</option>
+                        <option>非第一份實習</option>
+                        <option>第一份正職工作</option>
+                        <option>非第一份正職工作</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-2">符合度確認（與現況相符嗎？為什麼？）</label>
+                    <textarea id="feedback-match" rows="3" class="w-full border-gray-300 rounded-lg p-3 border outline-none focus:ring-2 focus:ring-indigo-200"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-2">哪一題讓你覺得難選？或有什麼改良建議？</label>
+                    <textarea id="feedback-improve" rows="3" class="w-full border-gray-300 rounded-lg p-3 border outline-none focus:ring-2 focus:ring-indigo-200"></textarea>
+                </div>
+                <button type="submit" class="btn-primary w-full py-4 rounded-xl font-bold transition">
+                    送出回饋並完成
+                </button>
+            </form>
+        </div>
+
+        <div id="final-screen" class="hidden text-center">
+            <h2 class="text-3xl font-bold mb-6" style="color: #857672;">已收到你的回饋！</h2>
+            <p class="mb-8 text-lg">你看清的不是自己的極限，而是工作的邊界。看得懂容器，是一輩子的能力 [cite: 327]。</p>
+            <button onclick="location.reload()" class="font-bold hover:underline" style="color: #9AB992;">重新測驗</button>
+        </div>
+    </main>
+
+    <script>
+        const quizData = [
+            { group: "一、決策密度", text: "在這份工作中，我多久需要做一次「會影響方向或結果」的決定？ [cite: 30]", options: { A: "幾乎沒有，主要是照需求執行 [cite: 31]", B: "偶爾，有一些小決定 [cite: 32]", C: "經常，需要自己判斷方向或取捨 [cite: 33]" } },
+            { group: "一、決策密度", text: "當事情卡關或不確定時，公司期待我怎麼做？ [cite: 34]", options: { A: "等明確指示再行動 [cite: 35]", B: "提出想法，請人確認 [cite: 36]", C: "自己判斷並承擔結果 [cite: 37]" } },
+            { group: "一、決策密度", text: "如果我今天不在，這份工作會發生什麼事？ [cite: 38]", options: { A: "幾乎不受影響，任何人都能快速接手 [cite: 39]", B: "需要一點交接，但流程清楚 [cite: 40]", C: "會卡住，因為需要我的判斷或脈絡 [cite: 41]" } },
+            { group: "二、腦力使用與思考空間", text: "我每天的工作內容中，有多少需要思考「為什麼要這樣做」？ [cite: 43]", options: { A: "幾乎沒有，只要照做 [cite: 44]", B: "偶爾，需要理解背景 [cite: 45]", C: "經常，需要理解目的與脈絡 [cite: 46]" } },
+            { group: "二、腦力使用與思考空間", text: "我能不能對需求或做法提出質疑或替代方案？ [cite: 47]", options: { A: "幾乎不行，需求已經定好 [cite: 48]", B: "可以提出，但不一定會被採納 [cite: 49]", C: "被期待提出不同做法一起討論 [cite: 50]" } },
+            { group: "二、腦力使用與思考空間", text: "我是否常覺得「其實不用我想這麼多，也可以完成」？ [cite: 51]", options: { A: "非常常 [cite: 52]", B: "偶爾 [cite: 53]", C: "很少或幾乎沒有 [cite: 54]" } },
+            { group: "三、角色邊界與成長可能", text: "如果我把現在的工作做得很好，通常會發生什麼？ [cite: 56]", options: { A: "被分配更多一樣的事情 [cite: 57]", B: "事情變多一點，內容差不多 [cite: 58]", C: "角色範圍或影響力會擴大 [cite: 59]" } },
+            { group: "三、角色邊界與成長可能", text: "這個角色是否有明確的「下一階段樣貌」？ [cite: 60]", options: { A: "沒有，主要靠年資累積 [cite: 61]", B: "有模糊方向，但不清楚 [cite: 62]", C: "有清楚的責任升級或定位變化 [cite: 63]" } },
+            { group: "三、角色邊界與成長可能", text: "在這個位置上，我是否被允許嘗試不同做法？ [cite: 64]", options: { A: "不太行，流程固定 [cite: 65]", B: "小範圍可以 [cite: 66]", C: "被鼓勵嘗試與優化 [cite: 67]" } },
+            { group: "四、責任歸屬與學習結構", text: "當我第一次做一件不熟的事情時，通常會發生什麼？ [cite: 69]", options: { A: "有人示範或清楚說明標準 [cite: 70]", B: "給方向，細節自己摸 [cite: 71]", C: "直接交給我，之後看結果 [cite: 72]" } },
+            { group: "四、責任歸屬與學習結構", text: "當事情結果不理想時，第一個被檢討的是什麼？ [cite: 73]", options: { A: "流程或資訊是否不足 [cite: 74]", B: "分工或溝通問題 [cite: 75]", C: "個人能力或主動性 [cite: 76]" } },
+            { group: "四、責任歸屬與學習結構", text: "在這個地方，「學會了」通常代表什麼？ [cite: 77]", options: { A: "能照流程完成、不出錯 [cite: 79]", B: "能撐住、不問、不造成麻煩 [cite: 80]", C: "知道為什麼這樣做，能獨立判斷 [cite: 78]" } },
+            { group: "五、未來感與自我想像", text: "如果我三年後還在這裡，我能否清楚想像自己的狀態？ [cite: 82]", options: { A: "很模糊，只是資深一點 [cite: 83]", B: "大概知道，但不確定 [cite: 84]", C: "很清楚自己會成為什麼樣的專業者 [cite: 85]" } },
+            { group: "五、未來感與自我想像", text: "想到這個三年後的自己，我的感受比較接近？ [cite: 86]", options: { A: "空或麻木 [cite: 87]", B: "普通、還好 [cite: 88]", C: "踏實或期待 [cite: 89]" } },
+            { group: "五、未來感與自我想像", text: "當我想到「繼續待在這裡」時，內在感覺比較像？ [cite: 90]", options: { A: "停滯、卡住 [cite: 91]", B: "穩定但有點空 [cite: 92]", C: "安心且有方向 [cite: 93]" } }
+        ];
+
+        let currentStep = 0;
+        let userAnswers = [];
+
+        function startQuiz() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('progress-container').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = quizData[currentStep];
+            document.getElementById('question-group').innerText = q.group;
+            document.getElementById('question-text').innerText = q.text.replace(/\[cite.*?\]/g, '');
+            document.getElementById('prev-btn').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            ['A', 'B', 'C'].forEach(label => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-5 border-2 border-gray-100 rounded-xl font-medium flex gap-4 items-center transition";
+                btn.innerHTML = `<span class="option-bg text-white w-8 h-8 flex items-center justify-center rounded-lg text-sm shrink-0">${label}</span> <span>${q.options[label].replace(/\[cite.*?\]/g, '')}</span>`;
+                btn.onclick = () => selectOption(label);
+                container.appendChild(btn);
+            });
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const percent = Math.round((currentStep / quizData.length) * 100);
+            document.getElementById('progress-text').innerText = `第 ${currentStep + 1} / ${quizData.length} 題`;
+            document.getElementById('progress-percent').innerText = `${percent}%`;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+        }
+
+        function selectOption(label) {
+            userAnswers[currentStep] = label;
+            if (currentStep < quizData.length - 1) {
+                currentStep++;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderQuestion();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('progress-container').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            const counts = { A: 0, B: 0, C: 0 };
+            userAnswers.forEach(ans => counts[ans]++);
+            const q1to12 = userAnswers.slice(0, 12);
+            const q1to12Counts = { A: 0, B: 0, C: 0 };
+            q1to12.forEach(ans => q1to12Counts[ans]++);
+
+            let finalType = "";
+            let finalDesc = "";
+            let finalDetail = "";
+
+            if (counts.A >= 8 && q1to12Counts.A >= 6) {
+                finalType = "Type 1 | 執行穩定型 [cite: 120]";
+                finalDesc = "工作被設計成「可替代、可輪替」。穩定清楚，但不要求主體性 [cite: 127, 129]。";
+                finalDetail = "你的環境屬於高流程化。系統已承接了大部分的判斷風險。若你感到『空』，是因為這個容器設計初衷就不要求主體性 [cite: 128, 294]。";
+            } else if (counts.B >= 6) {
+                finalType = "Type 2 | 過渡撐住型 [cite: 133]";
+                finalDesc = "看起來「好像可以發揮」，實際上不上不下，最容易讓人懷疑自己 [cite: 140-142]。";
+                finalDetail = "你處於權責模糊地帶。需要理解背景但無最終決策權。這種卡住感是結構性的，而非你的能力問題 [cite: 143, 301]。";
+            } else if (counts.B + counts.C >= 9 && counts.C >= 4) {
+                finalType = "Type 3 | 專業成長型 [cite: 144]";
+                finalDesc = "有學習曲線，成長慢但是真的。適合願意累積的人 [cite: 151-153]。";
+                finalDetail = "你的容器具備試錯空間與成長動能。只要未來感清楚，這就是一個健康的專業累積路徑 [cite: 179, 304]。";
+            } else if (counts.C >= 7) {
+                finalType = "Type 4 | 決策參與型 [cite: 154]";
+                finalDesc = "被需要的是「判斷與取捨」。高成長、高耗能，壓力來自責任 [cite: 160-162]。";
+                finalDetail = "你已成為決策鏈的關鍵節點。主體性就是你的產出，這是一個高度要求主導權的容器 [cite: 311, 313]。";
+            } else {
+                finalType = "Type 5 | 消耗型容器 [cite: 163]";
+                finalDesc = "不難卻慢慢掏空人。容易誤以為是自己不夠努力 [cite: 170, 171]。";
+                finalDetail = "最需要去罪化的一型。疲累來自於你處在一個『不承載人』的設計裡 [cite: 174, 319]。";
+            }
+
+            document.getElementById('result-type').innerText = finalType.replace(/\[cite.*?\]/g, '');
+            document.getElementById('result-desc').innerText = finalDesc.replace(/\[cite.*?\]/g, '');
+            document.getElementById('result-detail').innerText = finalDetail.replace(/\[cite.*?\]/g, '');
+            window.finalTestResult = finalType.replace(/\[cite.*?\]/g, '');
+        }
+
+        function showFeedback() {
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('feedback-screen').classList.remove('hidden');
+        }
+
+        document.getElementById('feedback-form').onsubmit = function(e) {
+            e.preventDefault();
+            document.getElementById('feedback-screen').classList.add('hidden');
+            document.getElementById('final-screen').classList.remove('hidden');
+        };
+    </script>
+</body>
+</html>
