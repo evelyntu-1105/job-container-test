@@ -16,12 +16,6 @@
         .bg-custom-progress { background-color: #D3DB9A; }
         .pre-line { white-space: pre-line; }
         .hidden { display: none; }
-        
-        /* 診斷卡片專屬樣式 */
-        .diagnosis-card {
-            border: 2px solid #9AB992;
-            background-color: rgba(154, 185, 146, 0.4); /* #9AB992 的 40% 透明度 */
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 md:p-8">
@@ -42,7 +36,7 @@
             <h1 class="text-3xl font-bold mb-8 leading-tight">工作設計型態測驗：<br>你知道你的工作其實是個怎樣的「容器」嗎？</h1>
             <div class="text-lg mb-10 space-y-6 leading-relaxed opacity-90">
                 <p>這個測驗是在幫我們看清一件事：我們現在待的工作，在組織裡是怎麼被設計的？</p>
-                <p>思考「我是不是不夠好」的時間裡，也了解「這個工作是用什麼邏輯在運運」。</p>
+                <p>思考「我是不是不夠好」的時間裡，也了解「這個工作是用什麼邏輯在運作」。</p>
             </div>
             <button onclick="startQuiz()" class="btn-primary w-full py-5 rounded-2xl text-xl font-bold shadow-sm">
                 開始了解我的工作是什麼樣的容器
@@ -62,49 +56,41 @@
             <div class="flex justify-center mb-6">
                 <span id="result-tag" class="px-4 py-1 rounded-full text-xs font-bold text-white tracking-widest"></span>
             </div>
-            <h2 id="result-title" class="text-4xl font-black mb-10"></h2>
+            <h2 id="result-title" class="text-4xl font-black mb-8"></h2>
             
-            <div class="flex flex-col md:flex-row gap-6 mb-10 text-left items-start">
-                <div class="flex-1 space-y-4">
+            <div class="flex flex-col md:flex-row gap-6 mb-12 text-left items-start">
+                <div class="flex-1 space-y-6">
                     <div class="p-6 rounded-2xl bg-gray-50/50 border border-gray-100">
                         <h4 class="font-bold mb-3 text-lg" style="color: #857672;">角色介紹</h4>
                         <p id="result-intro" class="text-base leading-relaxed pre-line opacity-90 text-[#857672]"></p>
                     </div>
                 </div>
-                <div class="w-full md:w-44 flex justify-center">
-                    <img id="result-image" src="" alt="容器插圖" class="w-32 md:w-40 h-auto object-contain">
+                <div class="w-full md:w-48 flex justify-center">
+                    <img id="result-image" src="" alt="容器插圖" class="w-40 h-auto object-contain rounded-xl">
                 </div>
             </div>
 
-            <div class="text-left p-8 rounded-3xl mb-6 diagnosis-card">
-                <h4 class="font-bold mb-4 text-lg" style="color: #857672;">這份工作的樣態推論</h4>
-                <div id="diagnosis-content" class="text-base leading-relaxed pre-line opacity-90 text-[#857672]"></div>
+            <div class="text-left p-8 rounded-3xl border-2 mb-10" style="background-color: #FDFDFB; border-color: #D3DB9A;">
+                <h4 class="font-bold mb-4 text-lg">這份工作的樣態推論</h4>
+                <div id="diagnosis-content" class="text-base leading-relaxed pre-line opacity-80 mb-6 text-[#857672]"></div>
+                
+                <hr class="border-[#D3DB9A]/30 my-6">
+                
+                <h4 class="font-bold mb-4 text-lg">給你的提醒與建議</h4>
+                <p id="result-bottomNote" class="text-base leading-relaxed pre-line opacity-80 mb-6"></p>
+                <div class="p-4 rounded-xl bg-[#D3DB9A]/10 border-l-4 border-[#D3DB9A]">
+                    <h5 class="font-bold text-sm mb-2">人格與心態轉向建議：</h5>
+                    <p id="personality-advice" class="text-sm leading-relaxed pre-line opacity-90"></p>
+                </div>
             </div>
 
-            <div class="text-left p-8 rounded-3xl mb-6 diagnosis-card">
-                <h4 class="font-bold mb-4 text-lg" style="color: #857672;">人格與心態轉向建議</h4>
-                <div id="personality-advice" class="text-base leading-relaxed pre-line opacity-90 text-[#857672]"></div>
-            </div>
-
-            <div class="text-left p-8 rounded-3xl mb-10 diagnosis-card">
-                <h4 class="font-bold mb-4 text-lg" style="color: #857672;">給你的提醒</h4>
-                <p id="result-bottomNote" class="text-base leading-relaxed pre-line opacity-90 text-[#857672]"></p>
-            </div>
-
-            <div class="text-xs italic mb-10 leading-loose text-[#B4A8A6] text-left pt-8 border-t border-gray-50">
+            <div class="text-xs italic mb-10 leading-loose text-[#B4A8A6] text-left border-t border-gray-50 pt-8">
                 <p>「這不是標籤，也不是評價。它只是告訴你：你現在待的是哪一種『被設計好的工作容器』。」</p>
                 <p class="mt-4 pre-line">若是感到消耗，通常是你對工作的期待與所待的容器不匹配。
-
-這不是在評斷你或公司的優劣 。你可以藉此看清：你的職業期待（你想要如何被使用、想要多少決策空間）與這個職位目前的設計定位（它是被設計成穩定執行還是決策參與）之間是否存在落差。
-
+這不是在評斷你或公司的優劣 。你可以藉此看清：你的職業期待與這個職位目前的設計定位之間是否存在落差。
 看清容器的形狀，是為了幫你找到更精準的語言，去描述你現在的狀態，並決定下一步該如何調整或對話 。</p>
             </div>
 
-            <div id="other-types-section" class="mt-16 text-left">
-                <h4 class="text-lg font-bold mb-8 text-[#857672]">看清別種工作容器的形狀</h4>
-                <div id="other-types" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-            </div>
-            
             <button onclick="showFeedback()" class="btn-primary w-full py-5 rounded-2xl text-lg font-bold mt-12">
                 下一步：分享你的感想
             </button>
@@ -115,7 +101,7 @@
             <form id="feedback-form" class="space-y-6">
                 <div class="space-y-2">
                     <label class="block text-sm font-bold opacity-80">這份測驗針對的工作，是你目前的：</label>
-                    <select id="job-stage" class="w-full border-2 border-gray-100 rounded-xl p-4 outline-none focus:border-indigo-200" required>
+                    <select id="job-stage" class="w-full border-2 border-gray-100 rounded-xl p-4 outline-none focus:border-indigo-200 transition" required>
                         <option value="">請選擇</option>
                         <option>第一份打工(兼任)工作</option>
                         <option>非第一份打工(兼任)工作</option>
@@ -129,29 +115,24 @@
                     <label class="block text-sm font-bold opacity-80">符合度確認</label>
                     <textarea id="feedback-match" rows="3" class="w-full border-2 border-gray-100 rounded-xl p-4 outline-none focus:border-indigo-200" placeholder="與現況相符嗎？為什麼？"></textarea>
                 </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-bold opacity-80">任何其他建議</label>
-                    <textarea id="feedback-other" rows="3" class="w-full border-2 border-gray-100 rounded-xl p-4 outline-none focus:border-indigo-200" placeholder="請填寫任何建議..."></textarea>
-                </div>
                 <button type="submit" id="submit-btn" class="btn-primary w-full py-5 rounded-2xl font-bold shadow-sm">送出回饋並完成</button>
             </form>
         </div>
 
         <div id="final-screen" class="hidden text-center py-10">
             <h2 class="text-3xl font-bold mb-6">已收到你的回饋！</h2>
-            <p class="mb-10 text-lg opacity-80">你看清的不是自己的極限，而是工作的邊界。<br>看得懂容器，是一輩子的能力。</p>
             <button onclick="resetToHome()" class="font-bold text-lg hover:underline" style="color: #9AB992;">重新測驗</button>
         </div>
     </main>
 
     <script>
-        // 設定圖片 ID
+        // 已更換為直連網址
         const imageUrls = {
-            type1: "https://drive.google.com/uc?id=1Psc0M1lA8v603D6r0QYshI05M8m-Wn1S", 
-            type2: "https://drive.google.com/uc?id=1NfUuS1mNIll0ff_xU1qzcDCMdJg04CenZV4", 
-            type3: "https://drive.google.com/uc?id=1vWz_XvXvXvXvXvXvXvXvXvXvXvXvXvX", 
-            type4: "https://drive.google.com/uc?id=1wYy_Yy_Yy_Yy_Yy_Yy_Yy_Yy_Yy_Yy_Y", 
-            type5: "https://drive.google.com/uc?id=1zZz_Zz_Zz_Zz_Zz_Zz_Zz_Zz_Zz_Zz_Z"  
+            type1: "https://drive.google.com/uc?export=view&id=1jo8RwteNzbkQZkX_9n1MCW-UFSyU1YUD", // 量杯
+            type2: "https://drive.google.com/uc?export=view&id=1xLQOuUF6g4QkDoqYpx0RZRWdZ5RsqJXX", // 土碗
+            type3: "https://drive.google.com/uc?export=view&id=1ZiEg44yIGwgTEgYqURfMNOJ_Mi8eU1Q5", // 花盆
+            type4: "https://drive.google.com/uc?export=view&id=1uHBv2rluRt0zZw0FvhYOYS7pEQ0eC1jF", // 燒瓶
+            type5: "https://drive.google.com/uc?export=view&id=10rw15O8eL9ZZCy2rKGylz-JILrgmQcZD"  // 紙杯
         };
 
         const quizData = [
@@ -175,31 +156,31 @@
         const resultCards = {
             type1: { 
                 id: "type1", title: "量產的標準量杯", tag: "# 執行穩定型", tagColor: "#D3DB9A", 
-                intro: "量杯的使命是追求極致的穩定與精確。它是為了「零誤差」而誕生的，因此被設計得透明且刻度清晰，確保任何人拿起它，都能精準量出相同的結果。它不需要具備改變形狀的野心，它的美感存在於「重複」與「可預測性」之中。只要刻度不歪，它就是最安全、最被系統依賴的基石。",
+                intro: "量杯的使命是追求極致的穩定與精確。它是為了「零誤差」而誕生的，因此被設計得透明且刻度清晰，確保任何人拿起它，都能精準量出相同的結果。它不需要具備改變形狀的野心，它的美感存在於「重複」與「可預測性」之中。",
                 bottomNote: "如果你現在需要的是生活節奏的穩定，這個量杯很好；但如果你想當液體自由流動，你會覺得這裡太擠了。",
                 advice: "既然容器被設計成追求準確執行，適度的「放空」與「按部就班」是保持能量的方式。你可以把這裡當作生活的穩定器，而不是靈魂的噴發地。"
             },
             type2: { 
                 id: "type2", title: "裂縫的暫存土碗", tag: "# 過渡撐住型", tagColor: "#D3DB9A", 
-                intro: "土碗的宿命是在正式規則尚未建立時，用血肉之軀撐起空隙。它雖然粗糙、甚至帶著裂縫，卻是組織中最靈活的補丁。它被設計成「不上不下」的狀態，因為它的價值就在於填補那些模糊、未定義的邊界。它常常感到疲累，是因為它不僅要裝東西，還要耗費額外的力氣去平衡那些因設計不周而產生的裂縫。",
+                intro: "土碗的宿命是在正式規則尚未建立時，用血肉之軀撐起空隙。它雖然粗糙、甚至帶著裂縫，卻是組織中最靈活的補丁。它被設計成「不上不下」的狀態，因為它的價值就在於填補那些模糊、未定義的邊界。",
                 bottomNote: "這種卡住感往往是結構性的，而非你的能力問題。建議思考：你追求的成長，這個定位是否真的能給予？",
                 advice: "你在幫系統補位，這種勞累感來自結構的不完善。請練習區分「我的責任」與「系統的破洞」，不要用自責來填補公司的裂縫。"
             },
             type3: { 
                 id: "type3", title: "陶藝師的培植花盆", tag: "# 專業成長型", tagColor: "#D3DB9A", 
-                intro: "花盆的設計，是為了承載「時間」與「生命力」的緩慢轉化。它不急著要你立刻產出刻度，而是提供足夠的土壤與試錯空間。它被設計成可以隨時「換盆」的結構，因為它預見了你會長大、會紮根、會變得比現在更繁茂。在這裡，所有的辛苦都不是損耗，而是轉化為根系養分的必經過程。",
+                intro: "花盆的設計，是為了承載「時間」與「生命力」的緩慢轉化。它不急著要你立刻產出刻度，而是提供足夠的土壤與試錯空間。它被設計成可以隨時「換盆」的結構，因為它預見了你會長大。",
                 bottomNote: "適合願意深耕的人，它被設計成可以長出未來的樣貌。",
                 advice: "既然身處具備累積性的容器，請保持耐心。這類職位需要的是「紮根」，目前的辛苦是在轉化為未來的專業資產。"
             },
             type4: { 
                 id: "type4", title: "無邊界的實驗燒瓶", tag: "# 決策參與型", tagColor: "#D3DB9A", 
-                intro: "燒瓶是被設計來承載最劇烈的反應與最沉重的決策責任。它是為了「未知」而設計的。在實驗室的熱火中，它不裝現成的刻度，而是裝滿了「判斷」與「取捨」。它的壓力不來自於體力的勞動，而是來自於它必須作為主導者，確保每一次化學反應都能通往正確結論。",
+                intro: "燒瓶是被設計來承載最劇烈的反應與最沉重的決策責任。它裝滿了「判斷」與「取捨」，壓力不來自於體力，而是來自於它必須作為主導者，確保每一次反應都能通往正確的結論。",
                 bottomNote: "高成長也高耗能，你的主體性就是你的產出。請評估個人能量與職業期望的平衡。",
-                advice: "你的產出就是你的腦力。請務必建立自己的「冷卻系統」。下班後徹底離線，對你而言不是福利，而是生存必需。"
+                advice: "你的產出就是你的腦力。高消耗是必然的，請務必建立自己的「冷卻系統」。下班後徹底離線，對你而言不是福利，而是生存必需。"
             },
             type5: { 
                 id: "type5", title: "漏斗狀的拋棄式紙杯", tag: "# 消耗型容器", tagColor: "#D3DB9A", 
-                intro: "紙杯的設計邏輯是「低成本」與「即時消耗」，它不打算留下任何累積。它被設計得輕巧、簡單，卻也極其脆弱。它沒有厚實的底部，東西倒進去、流出來，任務就結束了。它不要求你生根，也不要求你思考，它只需要你作為一個暫時的管道。感到空虛是必然的，因為紙杯的設計初衷，本來就沒打算承載人的成長。",
+                intro: "紙杯的設計邏輯是「低成本」與「即時消耗」，不打算留下任何累積。它沒有厚實的底部，東西倒進去、流出來，任務就結束了。它不要求你生根，只需要你作為一個暫時的管道。",
                 bottomNote: "認清這點是停止自責的第一步。不要試圖改變液體的形狀去適應一個漏水的紙杯，請看清職位定位。",
                 advice: "這個職位真的不是設計成需要那麼多腦力。你可以試著不用在工作上這麼燒腦糾結，做好份內事就好。下班後才是你真實的舞台，反而可以把心力轉向怎麼充實自己！"
             }
@@ -263,7 +244,6 @@
 
             const counts = { A: 0, B: 0, C: 0 };
             userAnswers.forEach(ans => counts[ans]++);
-            
             const q1to12 = userAnswers.slice(0, 12);
             const q1to12Counts = { A: 0, B: 0, C: 0 };
             q1to12.forEach(ans => q1to12Counts[ans]++);
@@ -303,24 +283,10 @@
             if(resultObj.id === "type1") diag = `從您提供的資訊，在決策密度上感受到「${q1T}」，且當你不在時「${q3T}」。\n\n這顯示這份工作是被設計成一個高品質的標準量杯，系統優先追求流程穩定。`;
             else if(resultObj.id === "type2") diag = `您提到遇到卡關時會「${q2T}」，且學會了代表「${q12T}」。\n\n這代表您扮演的是補縫隙的角色，高度依賴個人的適應力。`;
             else if(resultObj.id === "type3") diag = `您目前被期待「${q5T}」，且對三年後的感受是「${q14T}」。\n\n這顯示容器具備長期的承載力。`;
-            else if(resultObj.id === "type4") diag = `您在決策上「${q1T}」，且思考空間上感受到「${quizData[5].options[userAnswers[5]]}」。\n\n這顯示您目前處於實驗燒瓶中，系統高度依賴您的主體判斷。`;
-            else diag = `由於您提到日常工作中思考空間「${q5T}」，且想到繼續待著的感覺是「${quizData[14].options[userAnswers[14]]}」。\n\n這印證了這份工作是被設計成一次性消耗的紙杯。`;
+            else if(resultObj.id === "type4") diag = `您在決策上「${q1T}」，且思考空間上感受到「${quizData[5].options[userAnswers[5]]}」。\n\n這代表您處於實驗燒瓶中，系統高度依賴您的主導。`;
+            else diag = `由於您提到日常工作中思考空間「${q5T}」，且想到繼續待著的感覺是「${quizData[14].options[userAnswers[14]]}」。\n\n這印證了這份工作是被設計成一次性消耗的容器。`;
             
             document.getElementById('diagnosis-content').innerText = diag;
-
-            const otherContainer = document.getElementById('other-types');
-            otherContainer.innerHTML = '';
-            Object.keys(resultCards).forEach(key => {
-                if (resultCards[key].id !== resultObj.id) {
-                    const div = document.createElement('div');
-                    div.className = "flex flex-col items-center p-4 bg-gray-50 rounded-xl grayscale opacity-60";
-                    div.innerHTML = `
-                        <div class="w-12 h-12 bg-gray-200 rounded-full mb-3 flex items-center justify-center text-xl font-bold">?</div>
-                        <span class="text-[10px] font-bold text-center">${resultCards[key].title}</span>
-                    `;
-                    otherContainer.appendChild(div);
-                }
-            });
             window.scrollTo(0, 0);
         }
 
@@ -340,33 +306,9 @@
 
         document.getElementById('feedback-form').onsubmit = function(e) {
             e.preventDefault();
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbzklLT2YToNAHDtOQ8DZkDEOnZ1XcZa3kUJC-SlfDp-gKm8A5p92Ws3wA3eGWCiE6oC/exec';
-            const submitBtn = document.getElementById('submit-btn');
-            submitBtn.innerText = "傳送中...";
-            submitBtn.disabled = true;
-
-            const data = {
-                resultTitle: document.getElementById('result-title').innerText,
-                jobStage: document.getElementById('job-stage').value,
-                matchFeedback: document.getElementById('feedback-match').value,
-                otherFeedback: document.getElementById('feedback-other').value
-            };
-
-            fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(data)
-            })
-            .then(() => {
-                document.getElementById('feedback-screen').classList.add('hidden');
-                document.getElementById('final-screen').classList.remove('hidden');
-                window.scrollTo(0, 0);
-            })
-            .catch(error => {
-                alert('傳送失敗，請稍後再試！');
-                submitBtn.innerText = "重新送出";
-                submitBtn.disabled = false;
-            });
+            document.getElementById('feedback-screen').classList.add('hidden');
+            document.getElementById('final-screen').classList.remove('hidden');
+            window.scrollTo(0, 0);
         };
     </script>
 </body>
