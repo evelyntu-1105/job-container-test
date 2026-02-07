@@ -69,18 +69,18 @@
                     <p id="result-intro" class="text-base leading-relaxed pre-line opacity-90 text-[#857672]"></p>
                 </div>
 
-                <div class="text-left p-6 rounded-2xl bg-gray-50/50 border border-gray-100">
+                <div class="text-left p-8 rounded-3xl border-2" style="background-color: #FDFDFB; border-color: #D3DB9A;">
+                    <h4 class="font-bold mb-4 text-lg">這份工作的樣態推論</h4>
+                    <div id="diagnosis-content" class="text-base leading-relaxed pre-line opacity-80 mb-6 text-[#857672]"></div>
+                    <hr class="border-[#D3DB9A]/30 my-6">
+                    <h4 class="font-bold mb-4 text-lg">給你的提醒</h4>
+                    <p id="result-bottomNote" class="text-base leading-relaxed pre-line opacity-80"></p>
+                </div>
+
+                <div class="text-left p-6 rounded-3xl border border-gray-100 bg-gray-50/50">
                     <h4 class="font-bold mb-3 text-lg" style="color: #857672;">人格與心態轉向建議</h4>
                     <p id="personality-advice" class="text-base leading-relaxed pre-line opacity-90 text-[#857672]"></p>
                 </div>
-            </div>
-
-            <div class="text-left p-8 rounded-3xl border-2 mb-10" style="background-color: #FDFDFB; border-color: #D3DB9A;">
-                <h4 class="font-bold mb-4 text-lg">這份工作的樣態推論</h4>
-                <div id="diagnosis-content" class="text-base leading-relaxed pre-line opacity-80 mb-6 text-[#857672]"></div>
-                <hr class="border-[#D3DB9A]/30 my-6">
-                <h4 class="font-bold mb-4 text-lg">給你的提醒</h4>
-                <p id="result-bottomNote" class="text-base leading-relaxed pre-line opacity-80"></p>
             </div>
 
             <div class="text-xs italic mb-10 leading-loose text-[#B4A8A6] text-left border-t border-gray-50 pt-8">
@@ -90,42 +90,19 @@
 看清容器的形狀，是為了幫你找到更精準的語言，去描述你現在的狀態，並決定下一步該如何調整或對話 。</p>
             </div>
             
-            <button onclick="showFeedback()" class="btn-primary w-full py-5 rounded-2xl text-lg font-bold mt-12">
+            <button onclick="showFeedback()" class="btn-primary w-full py-5 rounded-2xl text-lg font-bold mt-8">
                 下一步：分享你的感想
             </button>
         </div>
 
-        <div id="feedback-screen" class="hidden">
-            <h2 class="text-2xl font-bold mb-8 text-center">感謝參與！請分享你的真實感受</h2>
-            <form id="feedback-form" class="space-y-6">
-                <div class="space-y-2">
-                    <label class="block text-sm font-bold opacity-80">這份測驗針對的工作，是你目前的：</label>
-                    <select id="job-stage" class="w-full border-2 border-gray-100 rounded-xl p-4 outline-none focus:border-indigo-200 transition" required>
-                        <option value="">請選擇</option>
-                        <option>第一份打工(兼任)工作</option>
-                        <option>非第一份打工(兼任)工作</option>
-                        <option>第一份實習</option>
-                        <option>非第一份實習</option>
-                        <option>第一份正職工作</option>
-                        <option>非第一份正職工作</option>
-                    </select>
-                </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-bold opacity-80">符合度確認</label>
-                    <textarea id="feedback-match" rows="3" class="w-full border-2 border-gray-100 rounded-xl p-4 outline-none focus:border-indigo-200" placeholder="與現況相符嗎？為什麼？"></textarea>
-                </div>
-                <button type="submit" id="submit-btn" class="btn-primary w-full py-5 rounded-2xl font-bold">送出回饋並完成</button>
-            </form>
-        </div>
-
-        <div id="final-screen" class="hidden text-center py-10">
-            <h2 class="text-3xl font-bold mb-6">已收到你的回饋！</h2>
-            <button onclick="resetToHome()" class="font-bold text-lg hover:underline" style="color: #9AB992;">重新測驗</button>
-        </div>
-    </main>
+        </main>
 
     <script>
-        const getDirectLink = (url) => url.replace('file/d/', 'uc?export=view&id=').replace('/view?usp=drivesdk', '');
+        const getDirectLink = (url) => {
+            if (!url) return '';
+            const id = url.match(/[-\w]{25,}/);
+            return id ? `https://drive.google.com/uc?export=view&id=${id[0]}` : url;
+        };
 
         const imageUrls = {
             type1: getDirectLink("https://drive.google.com/file/d/1jo8RwteNzbkQZkX_9n1MCW-UFSyU1YUD/view?usp=drivesdk"),
@@ -154,11 +131,11 @@
         ];
 
         const resultCards = {
-            type1: { id: "type1", title: "量產的標準量杯", tag: "# 執行穩定型", tagColor: "#D3DB9A", intro: "量杯的使命是追求極致的穩定與精確。它是為了「零誤差」而誕生的，因此被設計得透明且刻度清晰，確保任何人拿起它，都能精準量出相同的結果。", bottomNote: "如果你現在需要的是生活節奏的穩定，這個量杯很好。", advice: "既然容器被設計成追求準確執行，適度的「放空」與「按部就班」是保持能量的方式。" },
-            type2: { id: "type2", title: "裂縫的暫存土碗", tag: "# 過渡撐住型", tagColor: "#D3DB9A", intro: "土碗的宿命是在正式規則尚未建立時，用血肉之軀撐起空隙。它雖然粗糙、甚至帶著裂縫，卻是組織中最靈活的補丁。", bottomNote: "這種卡住感往往是結構性的，而非你的能力問題。", advice: "你在幫系統補位，請練習區分「我的責任」與「系統的破洞」，不要用自責來填補公司的裂縫。" },
-            type3: { id: "type3", title: "陶藝師的培植花盆", tag: "# 專業成長型", tagColor: "#D3DB9A", intro: "花盆的設計，是為了承載「時間」與「生命力」的緩慢轉化。它不急著要你立刻產出刻度，而是提供足夠的土壤與試錯空間。", bottomNote: "適合願意深耕的人，它被設計成可以長出未來的樣貌。", advice: "這類職位需要的是「紮根」，目前的辛苦是在轉化為未來的專業資產。" },
-            type4: { id: "type4", title: "無邊界的實驗燒瓶", tag: "# 決策參與型", tagColor: "#D3DB9A", intro: "燒瓶是被設計來承載最劇烈的反應與最沉重的決策責任。它裝滿了「判斷」與「取捨」，確保每一次反應都能通往正確的結論。", bottomNote: "高成長也高耗能，你的主體性就是你的產出。", advice: "你的產出就是你的腦力。請務必建立自己的「冷卻系統」，下班後徹底離線。" },
-            type5: { id: "type5", title: "漏斗狀的拋棄式紙杯", tag: "# 消耗型容器", tagColor: "#D3DB9A", intro: "紙杯的設計邏輯是「低成本」與「即時消耗」，不打算留下任何累積。它沒有厚實的底部，東西倒進去、流出來，任務就結束了。", bottomNote: "認清這點是停止自責的第一步。", advice: "做好份內事就好。下班後才是你真實的舞台，反而可以把心力轉向怎麼充實自己！" }
+            type1: { id: "type1", title: "量產的標準量杯", tag: "# 執行穩定型", tagColor: "#D3DB9A", intro: "量杯的使命是追求極致的穩定與精確。它是為了「零誤差」而誕生的，因此被設計得透明且刻度清晰，確保任何人拿起它，都能精準量出相同的結果。它不需要具備改變形狀的野心，它的美感存在於「重複」與「可預測性」之中。只要刻度不歪，它就是最安全、最被系統依賴的基石。", bottomNote: "如果你現在需要的是生活節奏的穩定，這個量杯很好；但如果你想當液體自由流動，你會覺得這裡太擠了。", advice: "既然容器被設計成追求準確執行，適度的「放空」與「按部就班」是保持能量的方式。你可以把這裡當作生活的穩定器，而不是靈魂的噴發地。" },
+            type2: { id: "type2", title: "裂縫的暫存土碗", tag: "# 過渡撐住型", tagColor: "#D3DB9A", intro: "土碗的宿命是在正式規則尚未建立時，用血肉之軀撐起空隙。它雖然粗糙、甚至帶著裂縫，卻是組織中最靈活的補丁。它被設計成「不上不下」的狀態，因為它的價值就在於填補那些模糊、未定義的邊界。它常常感到疲累，是因為它不僅要裝東西，還要耗費額外的力氣去平衡那些因設計不周而產生的裂縫。", bottomNote: "這種卡住感往往是結構性的，而非你的能力問題。建議思考：你追求的成長，這個定位是否真的能給予？", advice: "你在幫系統補位，這種勞累感來自結構的不完善。請練習區分「我的責任」與「系統的破洞」，不要用自責來填補公司的裂縫。" },
+            type3: { id: "type3", title: "陶藝師的培植花盆", tag: "# 專業成長型", tagColor: "#D3DB9A", intro: "花盆的設計，是為了承載「時間」與「生命力」的緩慢轉化。它不急著要你立刻產出刻度，而是提供足夠的土壤與試錯空間。它被設計成可以隨時「換盆」的結構，因為它預見了你會長大、會紮根、會變得比現在更繁茂。在這裡，所有的辛苦都不是損耗，而是轉化為根系養分的必經過程。", bottomNote: "適合願意深耕的人，它被設計成可以長出未來的樣貌。", advice: "既然身處具備累積性的容器，請保持耐心。這類職位需要的是「紮根」，目前的辛苦是在轉化為未來的專業資產。" },
+            type4: { id: "type4", title: "無邊界的實驗燒瓶", tag: "# 決策參與型", tagColor: "#D3DB9A", intro: "燒瓶是被設計來承載最劇烈的反應與最沉重的決策責任。它是為了「未知」而設計的。在實驗室的熱火中，它不裝現成的刻度，而是裝滿了「判斷」與「取捨」。它的壓力不來自於體力的勞動，而是來自於它必須作為主導者，確保每一次化學反應都能通往正確的結論。它是高成長的代名詞，也是高耗能的發動機。", bottomNote: "高成長也高耗能，你的主體性就是你的產出。請評估個人能量與職業期望的平衡。", advice: "你的產出就是你的腦力。高消耗是必然的，請務必建立自己的「冷卻系統」。下班後徹底離線，對你而言不是福利，職涯長久的生存必需。" },
+            type5: { id: "type5", title: "漏斗狀的拋棄式紙杯", tag: "# 消耗型容器", tagColor: "#D3DB9A", intro: "紙杯的設計邏輯是「低成本」與「即時消耗」，它不打算留下任何累積。它被設計得輕巧、簡單，卻也極其脆弱。它沒有厚實的底部，東西倒進去、流出來，任務就結束了。它不要求你生根，不需要你思考，它只需要你作為一個暫時的管道。感到空虛是必然的，因為紙杯的設計初衷，本來就沒打算承載人的成長。", bottomNote: "認清這點是停止自責的第一步。不要試圖改變液體的形狀去適應一個漏水的紙杯。", advice: "這個職位真的不是設計成需要那麼多腦力。你可以試著不用在工作上這麼燒腦糾結，做好份內事就好。下班後才是你真實的舞台，反而可以把心力轉向怎麼充實自己！" }
         };
 
         let currentStep = 0;
@@ -237,13 +214,17 @@
                 else resultObj = resultCards.type5;
             }
 
+            // 更新結果
             document.getElementById('result-tag').innerText = resultObj.tag;
             document.getElementById('result-tag').style.backgroundColor = resultObj.tagColor;
             document.getElementById('result-title').innerText = resultObj.title;
             document.getElementById('result-intro').innerText = resultObj.intro;
             document.getElementById('result-bottomNote').innerText = resultObj.bottomNote;
             document.getElementById('personality-advice').innerText = resultObj.advice;
-            document.getElementById('result-image').src = imageUrls[resultObj.id];
+            
+            // 強制賦值圖片路徑
+            const imgEl = document.getElementById('result-image');
+            imgEl.src = imageUrls[resultObj.id];
 
             const q1T = quizData[0].options[userAnswers[0]];
             const q3T = quizData[2].options[userAnswers[2]];
@@ -266,13 +247,6 @@
             document.getElementById('start-screen').classList.remove('hidden');
             window.scrollTo(0, 0);
         }
-
-        document.getElementById('feedback-form').onsubmit = function(e) {
-            e.preventDefault();
-            document.getElementById('feedback-screen').classList.add('hidden');
-            document.getElementById('final-screen').classList.remove('hidden');
-            window.scrollTo(0, 0);
-        };
     </script>
 </body>
 </html>
