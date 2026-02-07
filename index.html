@@ -17,6 +17,7 @@
         .bg-custom-progress { background-color: #D3DB9A; }
         .pre-line { white-space: pre-line; }
         .hidden { display: none; }
+        .cursor-pointer { cursor: pointer; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 md:p-8">
@@ -69,47 +70,77 @@
                     <p id="result-intro" class="text-base leading-relaxed pre-line opacity-90 text-[#857672]"></p>
                 </div>
 
-                <div class="text-left p-8 rounded-3xl border-2" style="background-color: #FDFDFB; border-color: #D3DB9A;">
-                    <h4 class="font-bold mb-4 text-lg">這份工作的樣態推論</h4>
-                    <div id="diagnosis-content" class="text-base leading-relaxed pre-line opacity-80 mb-6 text-[#857672]"></div>
-                    <hr class="border-[#D3DB9A]/30 my-6">
-                    <h4 class="font-bold mb-4 text-lg">給你的提醒</h4>
-                    <p id="result-bottomNote" class="text-base leading-relaxed pre-line opacity-80"></p>
-                </div>
+                <div id="personal-diagnosis-section" class="space-y-6">
+                    <div class="text-left p-8 rounded-3xl border-2" style="background-color: #FDFDFB; border-color: #D3DB9A;">
+                        <h4 class="font-bold mb-4 text-lg">這份工作的樣態推論</h4>
+                        <div id="diagnosis-content" class="text-base leading-relaxed pre-line opacity-80 mb-6 text-[#857672]"></div>
+                        <hr class="border-[#D3DB9A]/30 my-6">
+                        <h4 class="font-bold mb-4 text-lg">給你的提醒</h4>
+                        <p id="result-bottomNote" class="text-base leading-relaxed pre-line opacity-80"></p>
+                    </div>
 
-                <div class="text-left p-6 rounded-3xl border border-gray-100 bg-gray-50/50">
-                    <h4 class="font-bold mb-3 text-lg" style="color: #857672;">人格與心態轉向建議</h4>
-                    <p id="personality-advice" class="text-base leading-relaxed pre-line opacity-90 text-[#857672]"></p>
+                    <div class="text-left p-6 rounded-3xl border border-gray-100 bg-gray-50/50">
+                        <h4 class="font-bold mb-3 text-lg" style="color: #857672;">人格與心態轉向建議</h4>
+                        <p id="personality-advice" class="text-base leading-relaxed pre-line opacity-90 text-[#857672]"></p>
+                    </div>
                 </div>
             </div>
 
-            <div class="text-xs italic mb-10 leading-loose text-[#B4A8A6] text-left border-t border-gray-50 pt-8">
+            <div id="footer-guide" class="text-xs italic mb-10 leading-loose text-[#B4A8A6] text-left border-t border-gray-50 pt-8">
                 <p>「這不是標籤，也不是評價。它只是告訴你：你現在待的是哪一種『被設計好的工作容器』。」</p>
                 <p class="mt-4 pre-line">若是感到消耗，通常是你對工作的期待與所待的容器不匹配。
 這不是在評斷你或公司的優劣 。你可以藉此看清：你的職業期待與這個職位目前的設計定位之間是否存在落差。
 看清容器的形狀，是為了幫你找到更精準的語言，去描述你現在的狀態，並決定下一步該如何調整或對話 。</p>
             </div>
+
+            <div class="mt-16 text-left">
+                <h4 class="text-lg font-bold mb-8 text-[#857672]">查看其他工作容器的形狀</h4>
+                <div id="other-types" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+            </div>
             
-            <button onclick="showFeedback()" class="btn-primary w-full py-5 rounded-2xl text-lg font-bold mt-8">
+            <button onclick="showFeedback()" class="btn-primary w-full py-5 rounded-2xl text-lg font-bold mt-12">
                 下一步：分享你的感想
             </button>
         </div>
 
-        </main>
+        <div id="feedback-screen" class="hidden">
+            <h2 class="text-2xl font-bold mb-8 text-center">感謝參與！請分享你的真實感受</h2>
+            <form id="feedback-form" class="space-y-6">
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold opacity-80">這份測驗針對的工作，是你目前的：</label>
+                    <select id="job-stage" class="w-full border-2 border-gray-100 rounded-xl p-4 outline-none focus:border-indigo-200 transition" required>
+                        <option value="">請選擇</option>
+                        <option>第一份打工(兼任)工作</option>
+                        <option>非第一份打工(兼任)工作</option>
+                        <option>第一份實習</option>
+                        <option>非第一份實習</option>
+                        <option>第一份正職工作</option>
+                        <option>非第一份正職工作</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold opacity-80">符合度確認</label>
+                    <textarea id="feedback-match" rows="3" class="w-full border-2 border-gray-100 rounded-xl p-4 outline-none focus:border-indigo-200" placeholder="與現況相符嗎？為什麼？"></textarea>
+                </div>
+                <button type="submit" id="submit-btn" class="btn-primary w-full py-5 rounded-2xl font-bold">送出回饋並完成</button>
+            </form>
+        </div>
+
+        <div id="final-screen" class="hidden text-center py-10">
+            <h2 class="text-3xl font-bold mb-6">已收到你的回饋！</h2>
+            <button onclick="resetToHome()" class="font-bold text-lg hover:underline" style="color: #9AB992;">重新測驗</button>
+        </div>
+    </main>
 
     <script>
-        const getDirectLink = (url) => {
-            if (!url) return '';
-            const id = url.match(/[-\w]{25,}/);
-            return id ? `https://drive.google.com/uc?export=view&id=${id[0]}` : url;
-        };
+        const getDirectLink = (url) => url.replace('file/d/', 'uc?export=view&id=').replace('/view?usp=drivesdk', '');
 
         const imageUrls = {
             type1: getDirectLink("https://drive.google.com/file/d/1jo8RwteNzbkQZkX_9n1MCW-UFSyU1YUD/view?usp=drivesdk"),
             type2: getDirectLink("https://drive.google.com/file/d/1xLQOuUF6g4QkDoqYpx0RZRWdZ5RsqJXX/view?usp=drivesdk"),
             type3: getDirectLink("https://drive.google.com/file/d/1ZiEg44yIGwgTEgYqURfMNOJ_Mi8eU1Q5/view?usp=drivesdk"),
             type4: getDirectLink("https://drive.google.com/file/d/1uHBv2rluRt0zZw0FvhYOYS7pEQ0eC1jF/view?usp=drivesdk"),
-            type5: getDirectLink("https://upload.cc/i1/2026/02/07/Nsovx5.png")
+            type5: getDirectLink("https://drive.google.com/file/d/10rw15O8eL9ZZCy2rKGylz-JILrgmQcZD/view?usp=drivesdk")
         };
 
         const quizData = [
@@ -140,6 +171,7 @@
 
         let currentStep = 0;
         let userAnswers = [];
+        let initialResultId = ""; // 儲存使用者原始測驗出的型態
 
         function startQuiz() {
             document.getElementById('start-screen').classList.add('hidden');
@@ -178,7 +210,7 @@
                 currentStep++;
                 renderQuestion();
             } else {
-                showResults();
+                calculateResults();
             }
         }
 
@@ -189,11 +221,7 @@
             }
         }
 
-        function showResults() {
-            document.getElementById('quiz-screen').classList.add('hidden');
-            document.getElementById('progress-container').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
-
+        function calculateResults() {
             const counts = { A: 0, B: 0, C: 0 };
             userAnswers.forEach(ans => counts[ans]++);
             const q1to12Counts = { A: 0, B: 0, C: 0 };
@@ -213,25 +241,68 @@
                 else if (counts.C >= 7) resultObj = resultCards.type4;
                 else resultObj = resultCards.type5;
             }
+            
+            initialResultId = resultObj.id;
+            showDisplayResult(initialResultId, true);
+        }
 
-            // 更新結果
+        // 核心顯示函式：isInitial 代表是否為使用者測驗出的原始結果
+        function showDisplayResult(typeId, isInitial) {
+            const resultObj = resultCards[typeId];
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('progress-container').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            // 更新頂部資訊
             document.getElementById('result-tag').innerText = resultObj.tag;
             document.getElementById('result-tag').style.backgroundColor = resultObj.tagColor;
             document.getElementById('result-title').innerText = resultObj.title;
+            document.getElementById('result-image').src = imageUrls[resultObj.id];
             document.getElementById('result-intro').innerText = resultObj.intro;
-            document.getElementById('result-bottomNote').innerText = resultObj.bottomNote;
-            document.getElementById('personality-advice').innerText = resultObj.advice;
-            
-            // 強制賦值圖片路徑
-            const imgEl = document.getElementById('result-image');
-            imgEl.src = imageUrls[resultObj.id];
 
-            const q1T = quizData[0].options[userAnswers[0]];
-            const q3T = quizData[2].options[userAnswers[2]];
-            let diag = `從您提供的資訊，在決策密度上感受到「${q1T}」，且當你不在時「${q3T}」。這顯示了這份工作在組織中的特定設計邏輯。`;
-            document.getElementById('diagnosis-content').innerText = diag;
-            
+            const diagSection = document.getElementById('personal-diagnosis-section');
+
+            if (isInitial) {
+                // 如果是測驗結果，顯示診斷與建議
+                diagSection.classList.remove('hidden');
+                
+                const q1T = quizData[0].options[userAnswers[0]];
+                const q3T = quizData[2].options[userAnswers[2]];
+                let diag = `從您提供的資訊，在決策密度上感受到「${q1T}」，且當你不在時「${q3T}」。這顯示了這份工作在組織中的特定設計邏輯。`;
+                
+                document.getElementById('diagnosis-content').innerText = diag;
+                document.getElementById('result-bottomNote').innerText = resultObj.bottomNote;
+                document.getElementById('personality-advice').innerText = resultObj.advice;
+            } else {
+                // 如果是點擊觀看其他類型，隱藏個人診斷區塊
+                diagSection.classList.add('hidden');
+            }
+
+            // 更新下方「其他類型」清單
+            renderOtherTypes(typeId);
             window.scrollTo(0, 0);
+        }
+
+        function renderOtherTypes(currentId) {
+            const otherContainer = document.getElementById('other-types');
+            otherContainer.innerHTML = '';
+            
+            Object.keys(resultCards).forEach(key => {
+                if (key !== currentId) {
+                    const card = resultCards[key];
+                    const div = document.createElement('div');
+                    div.className = "flex flex-col items-center p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition shadow-sm";
+                    div.onclick = () => {
+                        // 點擊後，如果該類型是原始測出的型態，則恢復顯示診斷
+                        showDisplayResult(key, key === initialResultId);
+                    };
+                    div.innerHTML = `
+                        <img src="${imageUrls[key]}" class="w-16 h-16 object-contain mb-3 grayscale opacity-60">
+                        <span class="text-[10px] font-bold text-center">${card.title}</span>
+                    `;
+                    otherContainer.appendChild(div);
+                }
+            });
         }
 
         function showFeedback() {
@@ -243,10 +314,19 @@
         function resetToHome() {
             userAnswers = [];
             currentStep = 0;
+            initialResultId = "";
             document.getElementById('final-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
             document.getElementById('start-screen').classList.remove('hidden');
             window.scrollTo(0, 0);
         }
+
+        document.getElementById('feedback-form').onsubmit = function(e) {
+            e.preventDefault();
+            document.getElementById('feedback-screen').classList.add('hidden');
+            document.getElementById('final-screen').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        };
     </script>
 </body>
 </html>
